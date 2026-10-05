@@ -11,9 +11,11 @@ The aim is to generate a catalog of differentially expressed genes between diffe
 The dataset used is the **Zeng Aging Mouse 10Xv3** dataset from the Allen Institute.
 
 Dataset documentation:
+
 https://alleninstitute.github.io/abc_atlas_access/descriptions/Zeng_Aging_Mouse_10Xv3.html
 
 Tutorial:
+
 https://alleninstitute.github.io/abc_atlas_access/notebooks/Zeng_Aging_Mouse_10x_snRNASeq_tutorial.html
 
 The expression matrix contains:
@@ -70,11 +72,11 @@ The analysis followed these steps:
 9. Compare gene expression between different donor age/time-point groups.
 10. Perform pairwise Welch's t-tests at the donor level for each gene.
 11. Apply Benjamini-Hochberg false discovery rate (FDR) correction.
-12. Create a differential-expression catalog containing the age comparison, gene information, expression difference, p-value and FDR.
+12. Create differential-expression tables for the pairwise age/time-point comparisons.
 
 ## Age and time-point information
 
-The `age_1` and `age_2` columns in the differential-expression catalog correspond to values of the metadata field `donor_age`.
+The `age_1` and `age_2` columns in the differential-expression tables correspond to values of the metadata field `donor_age`.
 
 Examples of age/time-point labels in the dataset include:
 
@@ -103,38 +105,43 @@ The individual donor/sample is identified separately by `donor_label`.
 
 Age groups with only one donor were excluded from inferential pairwise testing because a statistical comparison requires replication.
 
-## Differential-expression catalog
+A total of 28 age/time-point groups were included in the pairwise analysis, resulting in 378 pairwise comparisons.
 
-The main output table contains the following columns:
+## Differential-expression analysis
 
-age_1
-age_2
-gene_identifier
-gene_symbol
-mean_log1pCPM_difference
-p_value
-FDR
+For each pairwise comparison, gene expression was compared at the donor level using Welch's t-test.
+
+Multiple testing correction was performed using the Benjamini-Hochberg false discovery rate (FDR) correction.
+
+Each pairwise differential-expression table contains:
+
+- `age_1`
+- `age_2`
+- `gene_identifier`
+- `gene_symbol`
+- `p_value`
+- `FDR`
 
 Each row represents one gene in one pairwise age/time-point comparison.
-
-The `mean_log1pCPM_difference` represents the difference in mean donor-level log-CPM expression between the two compared age groups.
-
-The `p_value` is obtained from the Welch's t-test.
-
-The `FDR` is the Benjamini-Hochberg adjusted p-value.
 
 ## Important note about the 668-gene result
 
 An intermediate analysis of the comparison between P53 and P54 produced 668 genes with an unadjusted p-value below 0.05.
 
-This 668-gene result should therefore not be interpreted as the complete differential-expression catalog across all age/time points.
+This 668-gene result should **not** be interpreted as the final number of statistically significant differentially expressed genes.
 
-The final analysis contains pairwise comparisons between the available age/time-point groups, with multiple-testing correction applied separately within each comparison.
+After Benjamini-Hochberg FDR correction, no genes remained significant at FDR < 0.05 for the P53 vs P54 comparison.
 
 ## Repository contents
 
-- `Evangelia.ipynb` — analysis notebook containing the data processing and differential-expression analysis.
-- `README.md` — documentation describing the dataset, software requirements, data access and analysis workflow.
+- `Evangelia.ipynb` — original analysis notebook.
+- `Zeng_Aging_Mouse_DE_Analysis_v2.ipynb` — clean/revised analysis notebook containing the updated analysis workflow.
+- `DE_comparison_summary.csv` — summary of all 378 pairwise age/time-point comparisons.
+- `Zeng_Aging_Mouse_10Xv3_Analysis_Process.docx` — analysis process documentation.
+- `Zeng_Aging_Mouse_10Xv3_Results.docx` — results documentation.
+- `README.md` — project documentation.
+
+The complete pairwise differential-expression tables are stored separately as a ZIP archive because of their large file size.
 
 ## Reproducibility
 
@@ -151,7 +158,3 @@ https://alleninstitute.github.io/abc_atlas_access/
 Allen Institute `abc_atlas_access` GitHub repository:
 
 https://github.com/AllenInstitute/abc_atlas_access
-
-Zeng Aging Mouse 10Xv3 dataset documentation:
-
-https://alleninstitute.github.io/abc_atlas_access/descriptions/Zeng_Aging_Mouse_10Xv3.html
